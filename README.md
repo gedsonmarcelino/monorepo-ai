@@ -11,7 +11,7 @@ O projeto usa:
 - `Vitest`
 - `ESLint` e `Prettier`
 
-A primeira API oficial do monorepo é o serviço de autenticação em [apps/auth/README.md](/Users/gedsonmarcelino/Workspace/myrepos/monorepo/apps/auth/README.md).
+A primeira API oficial do monorepo é o serviço de autenticação em [apps/auth/README.md](./apps/auth/README.md).
 
 ## Estrutura
 
@@ -39,7 +39,7 @@ A primeira API oficial do monorepo é o serviço de autenticação em [apps/auth
 ## Workspaces
 
 - `apps/auth`
-  Serviço dedicado de autenticação. Documentação própria em [apps/auth/README.md](/Users/gedsonmarcelino/Workspace/myrepos/monorepo/apps/auth/README.md).
+  Serviço dedicado de autenticação. Documentação própria em [apps/auth/README.md](./apps/auth/README.md).
 - `apps/api`
   Placeholder para futuros serviços ou gateway.
 - `apps/worker`
@@ -91,4 +91,3 @@ yarn dev
 3. Estenda `@repo/config-typescript/app` para apps ou `@repo/config-typescript/package` para bibliotecas.
 4. Reaproveite os scripts padrão de `build`, `clean`, `lint`, `test` e `typecheck`.
 5. Exporte a entrada principal usando o campo `exports` no `package.json`.
-
