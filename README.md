@@ -1,6 +1,17 @@
-# Monorepo Node + TypeScript
+# Monorepo AI
 
-Base inicial de um monorepo com `yarn workspaces`, `Node.js`, `TypeScript`, `ESM`, `ESLint`, `Prettier` e `Vitest`.
+Monorepo em `Node.js + TypeScript` para serviços backend e bibliotecas compartilhadas.
+
+## Visão geral
+
+O projeto usa:
+
+- `Yarn workspaces`
+- `TypeScript` com `ESM`
+- `Vitest`
+- `ESLint` e `Prettier`
+
+A primeira API oficial do monorepo é o serviço de autenticação em [apps/auth/README.md](/Users/gedsonmarcelino/Workspace/myrepos/monorepo/apps/auth/README.md).
 
 ## Estrutura
 
@@ -8,6 +19,7 @@ Base inicial de um monorepo com `yarn workspaces`, `Node.js`, `TypeScript`, `ESM
 .
 ├─ apps/
 │  ├─ api/
+│  ├─ auth/
 │  └─ worker/
 ├─ packages/
 │  ├─ config-eslint/
@@ -20,49 +32,56 @@ Base inicial de um monorepo com `yarn workspaces`, `Node.js`, `TypeScript`, `ESM
 ├─ eslint.config.mjs
 ├─ package.json
 ├─ tsconfig.base.json
-└─ vitest.config.mjs
+├─ vitest.config.mjs
+└─ README.md
 ```
+
+## Workspaces
+
+- `apps/auth`
+  Serviço dedicado de autenticação. Documentação própria em [apps/auth/README.md](/Users/gedsonmarcelino/Workspace/myrepos/monorepo/apps/auth/README.md).
+- `apps/api`
+  Placeholder para futuros serviços ou gateway.
+- `apps/worker`
+  Placeholder para processamento assíncrono.
+- `packages/config-eslint`
+  Configuração compartilhada de lint.
+- `packages/config-typescript`
+  Presets compartilhados de TypeScript.
+- `packages/shared`
+  Código compartilhado entre apps.
+- `packages/utils`
+  Utilitários reutilizáveis do monorepo.
 
 ## Convenções
 
-- `apps/*`: aplicações executáveis, como APIs, workers e CLIs.
-- `packages/*`: bibliotecas compartilhadas e configurações reutilizáveis.
+- `apps/*` são aplicações executáveis.
+- `packages/*` são bibliotecas e configurações compartilhadas.
 - Cada workspace usa `src/` como entrada e `dist/` como saída de build.
-- Apps podem depender de packages internos.
-- Packages compartilhados não devem depender de apps.
-- O escopo interno adotado é `@repo/*`.
+- O namespace interno adotado é `@repo/*`.
+- Apps podem depender de packages.
+- Packages não devem depender de apps.
 
 ## Scripts da raiz
 
-- `yarn build`: compila todos os workspaces.
-- `yarn clean`: remove saídas de build dos workspaces.
-- `yarn dev`: compila as libs internas e sobe a app `@repo/api` em modo watch.
-- `yarn lint`: executa o lint no monorepo.
-- `yarn test`: executa os testes com `Vitest`.
-- `yarn typecheck`: valida tipos em todos os workspaces.
+- `yarn dev`
+  compila as libs internas e inicia `@repo/auth` em modo watch
+- `yarn build`
+  compila os workspaces principais
+- `yarn lint`
+  executa o lint do monorepo
+- `yarn test`
+  executa os testes do monorepo
+- `yarn typecheck`
+  valida tipos em todos os workspaces principais
+- `yarn clean`
+  remove saídas de build dos workspaces
 
-## Como instalar
+## Como começar
 
 ```bash
 yarn install
-```
-
-## Como rodar
-
-```bash
 yarn dev
-yarn build
-yarn lint
-yarn test
-yarn typecheck
-```
-
-## Executar um workspace específico
-
-```bash
-yarn workspace @repo/api dev
-yarn workspace @repo/worker build
-yarn workspace @repo/shared test
 ```
 
 ## Criando novos workspaces
@@ -72,3 +91,4 @@ yarn workspace @repo/shared test
 3. Estenda `@repo/config-typescript/app` para apps ou `@repo/config-typescript/package` para bibliotecas.
 4. Reaproveite os scripts padrão de `build`, `clean`, `lint`, `test` e `typecheck`.
 5. Exporte a entrada principal usando o campo `exports` no `package.json`.
+

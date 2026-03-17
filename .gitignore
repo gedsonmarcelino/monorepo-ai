@@ -2,6 +2,9 @@ node_modules
 .yarn
 dist
 coverage
+.env
+.env.*
+*.sqlite
+*.sqlite-journal
 .DS_Store
 *.tsbuildinfo
-
