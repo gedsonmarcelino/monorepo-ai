@@ -1,0 +1,15 @@
+{
+  "name": "@repo/config-eslint",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "peerDependencies": {
+    "@eslint/js": "^8.57.0",
+    "eslint": "^8.57.0",
+    "globals": "^15.15.0",
+    "typescript-eslint": "^7.18.0"
+  }
+}

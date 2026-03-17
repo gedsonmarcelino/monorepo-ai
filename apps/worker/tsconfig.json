@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/config-typescript/app",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts"]
+}
+

@@ -1,0 +1,29 @@
+{
+  "name": "@repo/root",
+  "private": true,
+  "packageManager": "yarn@1.22.22",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspace @repo/utils build && yarn workspace @repo/shared build && yarn workspace @repo/api build && yarn workspace @repo/worker build",
+    "clean": "yarn workspaces run clean",
+    "dev": "yarn workspace @repo/utils build && yarn workspace @repo/shared build && yarn workspace @repo/api dev",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "yarn workspace @repo/utils build && yarn workspace @repo/shared build && yarn workspace @repo/utils typecheck && yarn workspace @repo/shared typecheck && yarn workspace @repo/api typecheck && yarn workspace @repo/worker typecheck"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.57.0",
+    "@repo/config-eslint": "1.0.0",
+    "@types/node": "^18.19.80",
+    "eslint": "^8.57.0",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^7.18.0",
+    "vitest": "^2.1.9"
+  }
+}
