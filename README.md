@@ -62,6 +62,16 @@ A primeira API oficial do monorepo é o serviço de autenticação em [apps/auth
 - Apps podem depender de packages.
 - Packages não devem depender de apps.
 
+## Convenções de Tipagem
+
+- Tipos e interfaces devem ficar em arquivos separados com extensão `*.type.ts`.
+- `type` deve usar prefixo `T`.
+  Exemplo: `TLoginInput`, `TAuthContext`
+- `interface` deve usar prefixo `I`.
+  Exemplo: `IClock`, `IUserRepository`
+- Evitar declarar `type` e `interface` diretamente em arquivos de implementação quando eles puderem ser reutilizados.
+- Quando o tipo for específico de um módulo, manter o arquivo `*.type.ts` ao lado da implementação correspondente.
+
 ## Scripts da raiz
 
 - `yarn dev`

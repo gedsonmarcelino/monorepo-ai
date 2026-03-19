@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
 
-import type { PasswordHasher } from './password-hasher.js';
+import type { IPasswordHasher } from './password-hasher.type.js';
 
 const digest = (value: string) => {
   return createHash('sha256').update(`phase-1:${value}`).digest('hex');
 };
 
-export class FakePasswordHasher implements PasswordHasher {
+export class FakePasswordHasher implements IPasswordHasher {
   async hash(value: string): Promise<string> {
     return `fake:${digest(value)}`;
   }
@@ -15,4 +15,3 @@ export class FakePasswordHasher implements PasswordHasher {
     return hashedValue === `fake:${digest(value)}`;
   }
 }
-

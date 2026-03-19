@@ -1,18 +1,18 @@
 import { randomUUID } from 'node:crypto';
 
-import type { AuthSession } from '../../contracts/auth.js';
-import type { SessionRepository } from './session-repository.js';
+import type { TAuthSession } from '../../contracts/auth.type.js';
+import type { ISessionRepository } from './session-repository.type.js';
 
-export class InMemorySessionRepository implements SessionRepository {
-  private readonly sessions: AuthSession[] = [];
+export class InMemorySessionRepository implements ISessionRepository {
+  private readonly sessions: TAuthSession[] = [];
 
   async create(input: {
     userId: string;
     refreshTokenHash: string;
     expiresAt: Date;
-  }): Promise<AuthSession> {
+  }): Promise<TAuthSession> {
     const now = new Date();
-    const session: AuthSession = {
+    const session: TAuthSession = {
       id: randomUUID(),
       userId: input.userId,
       refreshTokenHash: input.refreshTokenHash,
@@ -28,11 +28,11 @@ export class InMemorySessionRepository implements SessionRepository {
     return session;
   }
 
-  async findByRefreshTokenHash(refreshTokenHash: string): Promise<AuthSession | null> {
+  async findByRefreshTokenHash(refreshTokenHash: string): Promise<TAuthSession | null> {
     return this.sessions.find((session) => session.refreshTokenHash === refreshTokenHash) ?? null;
   }
 
-  async findById(id: string): Promise<AuthSession | null> {
+  async findById(id: string): Promise<TAuthSession | null> {
     return this.sessions.find((session) => session.id === id) ?? null;
   }
 
@@ -41,7 +41,7 @@ export class InMemorySessionRepository implements SessionRepository {
     refreshTokenHash: string;
     expiresAt: Date;
     lastUsedAt: Date;
-  }): Promise<AuthSession> {
+  }): Promise<TAuthSession> {
     const session = this.sessions.find((entry) => entry.id === input.sessionId);
 
     if (!session) {
@@ -67,4 +67,3 @@ export class InMemorySessionRepository implements SessionRepository {
     session.updatedAt = revokedAt;
   }
 }
-

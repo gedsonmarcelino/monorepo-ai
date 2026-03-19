@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import type { IAuthResponse, TCreateAuthRouterInput } from './create-auth-router.type.js';
 
 import {
   InactiveUserError,
@@ -8,18 +9,6 @@ import {
   SessionExpiredError,
   SessionRevokedError,
 } from '../../../lib/errors/auth-errors.js';
-import { AuthService } from '../auth-service.js';
-
-type CreateAuthRouterInput = {
-  authService: AuthService;
-};
-
-type AuthResponse = {
-  status(code: number): {
-    json(payload: unknown): unknown;
-    send(): unknown;
-  };
-};
 
 const loginSchema = z.object({
   deviceName: z.string().min(1).optional(),
@@ -31,7 +20,7 @@ const refreshSchema = z.object({
   refreshToken: z.string().min(1),
 });
 
-export const createAuthRouter = ({ authService }: CreateAuthRouterInput) => {
+export const createAuthRouter = ({ authService }: TCreateAuthRouterInput) => {
   const router = Router();
 
   router.post('/login', createLoginHandler({ authService }));
@@ -42,12 +31,12 @@ export const createAuthRouter = ({ authService }: CreateAuthRouterInput) => {
   return router;
 };
 
-export const createLoginHandler = ({ authService }: CreateAuthRouterInput) => {
+export const createLoginHandler = ({ authService }: TCreateAuthRouterInput) => {
   return async (
     request: {
       body: unknown;
     },
-    response: AuthResponse,
+    response: IAuthResponse,
   ) => {
     const parsed = loginSchema.safeParse(request.body);
 
@@ -67,12 +56,12 @@ export const createLoginHandler = ({ authService }: CreateAuthRouterInput) => {
   };
 };
 
-export const createRefreshHandler = ({ authService }: CreateAuthRouterInput) => {
+export const createRefreshHandler = ({ authService }: TCreateAuthRouterInput) => {
   return async (
     request: {
       body: unknown;
     },
-    response: AuthResponse,
+    response: IAuthResponse,
   ) => {
     const parsed = refreshSchema.safeParse(request.body);
 
@@ -92,12 +81,12 @@ export const createRefreshHandler = ({ authService }: CreateAuthRouterInput) => 
   };
 };
 
-export const createLogoutHandler = ({ authService }: CreateAuthRouterInput) => {
+export const createLogoutHandler = ({ authService }: TCreateAuthRouterInput) => {
   return async (
     request: {
       body: unknown;
     },
-    response: AuthResponse,
+    response: IAuthResponse,
   ) => {
     const parsed = refreshSchema.safeParse(request.body);
 
@@ -114,14 +103,14 @@ export const createLogoutHandler = ({ authService }: CreateAuthRouterInput) => {
   };
 };
 
-export const createMeHandler = ({ authService }: CreateAuthRouterInput) => {
+export const createMeHandler = ({ authService }: TCreateAuthRouterInput) => {
   return async (
     request: {
       headers?: {
         authorization?: string;
       };
     },
-    response: AuthResponse,
+    response: IAuthResponse,
   ) => {
     const authorization = request.headers?.authorization;
 
@@ -164,7 +153,7 @@ export const createMeHandler = ({ authService }: CreateAuthRouterInput) => {
   };
 };
 
-const respondWithAuthError = (response: AuthResponse, error: unknown) => {
+const respondWithAuthError = (response: IAuthResponse, error: unknown) => {
   if (error instanceof InvalidCredentialsError) {
     return response.status(401).json({
       error: 'invalid_credentials',

@@ -53,6 +53,19 @@ apps/auth
 - `src/modules/sessions`
   Contratos e repositório in-memory de sessões.
 
+## Convenções de Tipagem
+
+O serviço segue o padrão oficial do monorepo para tipos e interfaces:
+
+- arquivos de tipos e interfaces usam extensão `*.type.ts`
+- `type` usa prefixo `T`
+- `interface` usa prefixo `I`
+- contratos compartilhados do domínio ficam em arquivos dedicados, como:
+  - `src/contracts/auth.type.ts`
+  - `src/lib/security/password-hasher.type.ts`
+  - `src/modules/sessions/session-repository.type.ts`
+  - `src/modules/auth/http/create-auth-router.type.ts`
+
 ## Regras de negócio
 
 - Usuários não serão criados por endpoint público no v1.
@@ -69,7 +82,7 @@ apps/auth
 - `POST /auth/logout`
 - `GET /auth/me`
 
-## Status da Fase 1
+## Status atual
 
 Já existe:
 
@@ -77,13 +90,14 @@ Já existe:
 - bootstrap inicial do Express com `/health`
 - contratos de autenticação
 - `AuthService`
+- rotas HTTP de `login`, `refresh`, `logout` e `me`
 - repositórios in-memory para testes
 - fakes de hashing, token e clock
-- testes unitários cobrindo login, refresh, logout e contexto autenticado
+- collection do Postman para testes reais
+- testes unitários cobrindo domínio e handlers HTTP
 
 Ainda não existe:
 
-- rotas completas de autenticação
 - integração HTTP dos endpoints planejados
 - banco real
 - Prisma e migrations
@@ -106,6 +120,10 @@ O serviço está sendo construído com testes unitários primeiro.
 - rejeição de sessão expirada
 - revogação de sessão
 - leitura do contexto autenticado
+- validação e respostas HTTP de `login`
+- validação e respostas HTTP de `refresh`
+- validação e respostas HTTP de `logout`
+- validação e respostas HTTP de `me`
 
 ### Próximas camadas de teste
 
@@ -142,6 +160,20 @@ yarn workspace @repo/auth dev
 yarn workspace @repo/auth test
 ```
 
+### Testar com Postman
+
+A collection fica em:
+
+`apps/auth/postman/auth-service.postman_collection.json`
+
+Ela inclui:
+
+- `GET /health`
+- `POST /auth/login`
+- `POST /auth/refresh`
+- `GET /auth/me`
+- `POST /auth/logout`
+
 ## Roadmap
 
 ### Fase 1
@@ -153,10 +185,9 @@ yarn workspace @repo/auth test
 
 ### Fase 2
 
-- implementar handlers e rotas Express
-- adicionar validação de payload
-- conectar controladores ao domínio
-- preparar tratamento consistente de erros
+- consolidar runtime local e configuração de ambiente
+- substituir fakes por adapters reais de token e hash
+- preparar tratamento consistente de erros para produção
 
 ### Fase 3
 

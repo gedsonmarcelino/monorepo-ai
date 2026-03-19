@@ -1,15 +1,14 @@
-import type { UserRepository } from './user-repository.js';
-import type { User } from './user.js';
+import type { IUserRepository } from './user-repository.type.js';
+import type { TUser } from './user.type.js';
 
-export class InMemoryUserRepository implements UserRepository {
-  constructor(private readonly users: User[]) {}
+export class InMemoryUserRepository implements IUserRepository {
+  constructor(private readonly users: TUser[]) {}
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<TUser | null> {
     return this.users.find((user) => user.email === email) ?? null;
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<TUser | null> {
     return this.users.find((user) => user.id === id) ?? null;
   }
 }
-

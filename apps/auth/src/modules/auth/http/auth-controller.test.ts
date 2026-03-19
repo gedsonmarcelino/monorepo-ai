@@ -12,6 +12,11 @@ import {
   createMeHandler,
   createRefreshHandler,
 } from './create-auth-router.js';
+import type {
+  TAuthSuccessPayload,
+  TErrorPayload,
+  TResponseRecorderState,
+} from './auth-controller.type.js';
 
 const buildTestContext = async () => {
   const passwordHasher = new FakePasswordHasher();
@@ -53,28 +58,8 @@ const buildTestContext = async () => {
   };
 };
 
-type AuthSuccessPayload = {
-  accessToken: string;
-  refreshToken: string;
-  tokenType: 'Bearer';
-  expiresIn: number;
-  user: {
-    email: string;
-    id: string;
-    isActive: boolean;
-  };
-};
-
-type ErrorPayload = {
-  error: string;
-  message: string;
-};
-
 const createResponseRecorder = () => {
-  const state: {
-    body: unknown;
-    statusCode: number | null;
-  } = {
+  const state: TResponseRecorderState = {
     body: null,
     statusCode: null,
   };
@@ -125,7 +110,7 @@ describe('Auth HTTP endpoints', () => {
         response,
       );
 
-      const payload = state.body as AuthSuccessPayload;
+      const payload = state.body as TAuthSuccessPayload;
 
       expect(state.statusCode).toBe(200);
       expect(payload).toMatchObject({
@@ -156,7 +141,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(400);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'validation_error',
       });
     });
@@ -175,7 +160,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(400);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'validation_error',
       });
     });
@@ -195,7 +180,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(401);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'invalid_credentials',
       });
     });
@@ -215,7 +200,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(403);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'inactive_user',
       });
     });
@@ -239,7 +224,7 @@ describe('Auth HTTP endpoints', () => {
         response,
       );
 
-      const payload = state.body as AuthSuccessPayload;
+      const payload = state.body as TAuthSuccessPayload;
 
       expect(state.statusCode).toBe(200);
       expect(payload.refreshToken).toEqual(expect.any(String));
@@ -259,7 +244,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(400);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'validation_error',
       });
     });
@@ -278,7 +263,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(401);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'invalid_refresh_token',
       });
     });
@@ -303,7 +288,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(403);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'session_expired',
       });
     });
@@ -330,7 +315,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(403);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'session_revoked',
       });
     });
@@ -353,7 +338,7 @@ describe('Auth HTTP endpoints', () => {
         firstResponse.response,
       );
 
-      const refreshPayload = firstResponse.state.body as AuthSuccessPayload;
+      const refreshPayload = firstResponse.state.body as TAuthSuccessPayload;
 
       await handler(
         {
@@ -366,7 +351,7 @@ describe('Auth HTTP endpoints', () => {
 
       expect(refreshPayload.refreshToken).not.toBe(loginPayload.refreshToken);
       expect(staleResponse.state.statusCode).toBe(401);
-      expect(staleResponse.state.body as ErrorPayload).toMatchObject({
+      expect(staleResponse.state.body as TErrorPayload).toMatchObject({
         error: 'invalid_refresh_token',
       });
     });
@@ -406,7 +391,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(400);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'validation_error',
       });
     });
@@ -462,7 +447,7 @@ describe('Auth HTTP endpoints', () => {
       await handler({}, response);
 
       expect(state.statusCode).toBe(401);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'invalid_access_token',
       });
     });
@@ -481,7 +466,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(401);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'invalid_access_token',
       });
     });
@@ -508,7 +493,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(403);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'session_revoked',
       });
     });
@@ -553,7 +538,7 @@ describe('Auth HTTP endpoints', () => {
       );
 
       expect(state.statusCode).toBe(403);
-      expect(state.body as ErrorPayload).toMatchObject({
+      expect(state.body as TErrorPayload).toMatchObject({
         error: 'inactive_user',
       });
     });

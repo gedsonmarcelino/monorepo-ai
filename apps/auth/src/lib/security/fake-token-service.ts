@@ -1,20 +1,20 @@
 import { createHash, randomUUID } from 'node:crypto';
 
-import type { AuthTokenPayload } from '../../contracts/auth.js';
-import type { TokenService } from './token-service.js';
+import type { TAuthTokenPayload } from '../../contracts/auth.type.js';
+import type { ITokenService } from './token-service.type.js';
 
-const encodePayload = (payload: AuthTokenPayload) => {
+const encodePayload = (payload: TAuthTokenPayload) => {
   return Buffer.from(JSON.stringify(payload)).toString('base64url');
 };
 
-const decodePayload = (token: string): AuthTokenPayload => {
-  return JSON.parse(Buffer.from(token, 'base64url').toString('utf8')) as AuthTokenPayload;
+const decodePayload = (token: string): TAuthTokenPayload => {
+  return JSON.parse(Buffer.from(token, 'base64url').toString('utf8')) as TAuthTokenPayload;
 };
 
-export class FakeTokenService implements TokenService {
+export class FakeTokenService implements ITokenService {
   readonly accessTokenTtlInSeconds = 60 * 15;
 
-  async createAccessToken(payload: AuthTokenPayload): Promise<string> {
+  async createAccessToken(payload: TAuthTokenPayload): Promise<string> {
     return encodePayload(payload);
   }
 
@@ -22,8 +22,7 @@ export class FakeTokenService implements TokenService {
     return createHash('sha256').update(randomUUID()).digest('hex');
   }
 
-  async readAccessToken(token: string): Promise<AuthTokenPayload> {
+  async readAccessToken(token: string): Promise<TAuthTokenPayload> {
     return decodePayload(token);
   }
 }
-

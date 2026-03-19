@@ -1,13 +1,9 @@
 import express from 'express';
 
-import { AuthService } from '../modules/auth/auth-service.js';
+import type { TCreateAppInput } from './create-app.type.js';
 import { createAuthRouter } from '../modules/auth/http/create-auth-router.js';
 
-type CreateAppInput = {
-  authService?: AuthService;
-};
-
-export const createApp = ({ authService }: CreateAppInput = {}) => {
+export const createApp = ({ authService }: TCreateAppInput = {}) => {
   const app = express();
 
   app.use(express.json());

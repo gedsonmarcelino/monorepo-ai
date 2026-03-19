@@ -1,10 +1,10 @@
 import type {
-  AuthContext,
-  AuthTokenPayload,
-  LoginInput,
-  LoginResult,
-  RefreshInput,
-} from '../../contracts/auth.js';
+  TAuthContext,
+  TAuthTokenPayload,
+  TLoginInput,
+  TLoginResult,
+  TRefreshInput,
+} from '../../contracts/auth.type.js';
 import {
   InactiveUserError,
   InvalidCredentialsError,
@@ -12,27 +12,15 @@ import {
   SessionExpiredError,
   SessionRevokedError,
 } from '../../lib/errors/auth-errors.js';
-import type { PasswordHasher } from '../../lib/security/password-hasher.js';
-import type { TokenService } from '../../lib/security/token-service.js';
-import type { Clock } from '../../lib/time/clock.js';
-import type { SessionRepository } from '../sessions/session-repository.js';
-import type { UserRepository } from '../users/user-repository.js';
+import type { TAuthServiceDependencies } from './auth-service-dependencies.type.js';
 import { hashRefreshToken } from './refresh-token-digester.js';
 
 const refreshTokenTtlInDays = 7;
 
-type AuthServiceDependencies = {
-  clock: Clock;
-  passwordHasher: PasswordHasher;
-  sessionRepository: SessionRepository;
-  tokenService: TokenService;
-  userRepository: UserRepository;
-};
-
 export class AuthService {
-  constructor(private readonly dependencies: AuthServiceDependencies) {}
+  constructor(private readonly dependencies: TAuthServiceDependencies) {}
 
-  async login(input: LoginInput): Promise<LoginResult> {
+  async login(input: TLoginInput): Promise<TLoginResult> {
     const user = await this.dependencies.userRepository.findByEmail(input.email);
 
     if (!user) {
@@ -58,7 +46,7 @@ export class AuthService {
     });
   }
 
-  async refresh(input: RefreshInput): Promise<LoginResult> {
+  async refresh(input: TRefreshInput): Promise<TLoginResult> {
     const refreshTokenHash = hashRefreshToken(input.refreshToken);
     const session = await this.dependencies.sessionRepository.findByRefreshTokenHash(refreshTokenHash);
 
@@ -116,7 +104,7 @@ export class AuthService {
     };
   }
 
-  async logout(input: RefreshInput): Promise<void> {
+  async logout(input: TRefreshInput): Promise<void> {
     const refreshTokenHash = hashRefreshToken(input.refreshToken);
     const session = await this.dependencies.sessionRepository.findByRefreshTokenHash(refreshTokenHash);
 
@@ -127,7 +115,7 @@ export class AuthService {
     await this.dependencies.sessionRepository.revoke(session.id, this.dependencies.clock.now());
   }
 
-  async me(accessToken: string): Promise<AuthContext> {
+  async me(accessToken: string): Promise<TAuthContext> {
     const payload = await this.dependencies.tokenService.readAccessToken(accessToken);
     const session = await this.dependencies.sessionRepository.findById(payload.sessionId);
 
@@ -162,7 +150,7 @@ export class AuthService {
   private async issueSession(input: {
     email: string;
     userId: string;
-  }): Promise<LoginResult> {
+  }): Promise<TLoginResult> {
     const now = this.dependencies.clock.now();
     const refreshToken = await this.dependencies.tokenService.createRefreshToken();
     const refreshTokenHash = hashRefreshToken(refreshToken);
@@ -172,7 +160,7 @@ export class AuthService {
       userId: input.userId,
     });
 
-    const payload: AuthTokenPayload = {
+    const payload: TAuthTokenPayload = {
       email: input.email,
       sessionId: session.id,
       sub: input.userId,
@@ -198,4 +186,3 @@ const addDays = (date: Date, days: number) => {
   next.setDate(next.getDate() + days);
   return next;
 };
-

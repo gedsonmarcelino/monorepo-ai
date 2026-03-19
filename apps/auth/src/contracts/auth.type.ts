@@ -1,10 +1,10 @@
-export type AuthenticatedUser = {
+export type TAuthenticatedUser = {
   id: string;
   email: string;
   isActive: boolean;
 };
 
-export type AuthSession = {
+export type TAuthSession = {
   id: string;
   userId: string;
   refreshTokenHash: string;
@@ -15,32 +15,32 @@ export type AuthSession = {
   updatedAt: Date;
 };
 
-export type LoginInput = {
+export type TLoginInput = {
   email: string;
   password: string;
   deviceName?: string;
 };
 
-export type LoginResult = {
+export type TLoginResult = {
   accessToken: string;
   refreshToken: string;
   tokenType: 'Bearer';
   expiresIn: number;
-  user: AuthenticatedUser;
+  user: TAuthenticatedUser;
 };
 
-export type RefreshInput = {
+export type TRefreshInput = {
   refreshToken: string;
 };
 
-export type AuthTokenPayload = {
+export type TAuthTokenPayload = {
   sub: string;
   email: string;
   sessionId: string;
 };
 
-export type AuthContext = {
-  user: AuthenticatedUser;
-  session: AuthSession;
+export type TAuthContext = {
+  user: TAuthenticatedUser;
+  session: TAuthSession;
 };
 

@@ -1,6 +1,6 @@
-import type { Clock } from './clock.js';
+import type { IClock } from './clock.type.js';
 
-export class FixedClock implements Clock {
+export class FixedClock implements IClock {
   constructor(private current: Date) {}
 
   now(): Date {
@@ -11,4 +11,3 @@ export class FixedClock implements Clock {
     this.current = new Date(date);
   }
 }
-
