@@ -1,9 +1,20 @@
 import express from 'express';
 
-export const createApp = () => {
+import { AuthService } from '../modules/auth/auth-service.js';
+import { createAuthRouter } from '../modules/auth/http/create-auth-router.js';
+
+type CreateAppInput = {
+  authService?: AuthService;
+};
+
+export const createApp = ({ authService }: CreateAppInput = {}) => {
   const app = express();
 
   app.use(express.json());
+
+  if (authService) {
+    app.use('/auth', createAuthRouter({ authService }));
+  }
 
   app.get('/health', (_request, response) => {
     response.status(200).json({
@@ -15,4 +26,3 @@ export const createApp = () => {
 
   return app;
 };
-
